@@ -23,5 +23,5 @@ urlpatterns = [
     path('', views.home, name="home"),
     path('pag1', views.pag1, name="pag1"),
     path('pag2', views.pag2, name="pag2"),
-    #path('profile/', include("authsys.urls"), name="profile"),
+    path('profile/', include("authsys.urls")),
 ]
