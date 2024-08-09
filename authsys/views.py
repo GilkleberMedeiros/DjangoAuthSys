@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView
@@ -25,6 +25,14 @@ def profile(request):
 
 class LogIn(LoginView):
     template_name = "login.html"
+
+
+class LogOut(LogoutView):
+    template_name = "logout.html"
+
+    def get_redirect_url(self):
+        return reverse_lazy("home")
+
 
 class SignUp(SuccessMessageMixin, CreateView):
     template_name = "signup.html"
