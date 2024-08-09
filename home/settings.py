@@ -122,7 +122,7 @@ STATICFILES_DIRS = [
     "authsys/static/",
 ]
 
-# Auth Configuration
+# Auth Url Configuration
 LOGIN_URL = "/profile/login/"
 LOGIN_REDIRECT_URL = "/profile/"
 LOGOUT_REDIRECT_URL = ""

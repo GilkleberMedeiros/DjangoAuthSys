@@ -1,6 +1,9 @@
 from django.shortcuts import render
+
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -13,12 +16,15 @@ from django.http.response import HttpResponse
 def home(request):
     return render(request, "home.html")
 
+@login_required
 def pag1(request):
     return render(request, "pag1.html")
 
+@login_required
 def pag2(request):
     return render(request, "pag2.html")
 
+@login_required
 def profile(request):
     return HttpResponse("Nothing here!")
 
