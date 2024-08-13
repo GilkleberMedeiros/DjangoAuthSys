@@ -2,17 +2,26 @@ from django.shortcuts import render
 
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User, Permission
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import (
+    login_required, 
+    permission_required, 
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView
+from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 
 from .forms import UserSignUpModelForm
 from .models import Dummy
 from .utils import is_permission_created_create
 
-from django.http.response import HttpResponse
+from django.http.response import (
+    HttpResponse, 
+    HttpResponseRedirect,
+    HttpResponseNotFound,
+)
 
 # Create your views here.
 def home(request):
@@ -27,9 +36,26 @@ def pag1(request):
 def pag2(request):
     return render(request, "pag2.html")
 
-@login_required
-def profile(request):
-    return HttpResponse("Nothing here!")
+class Profile(LoginRequiredMixin, TemplateView):
+    template_name = "profile.html"
+
+    def post(self, request, *args, **kwargs):
+        fields = ["id", "username", "first_name", "last_name", "email"]
+        user_new_data = {}
+
+        for key in fields:
+            try: user_new_data[key] = request.POST[key]
+            except: pass
+
+        try: user = User.objects.get(pk=user_new_data["id"])
+        except: return HttpResponseNotFound("Usuário não existe!")
+
+        for key, value in user_new_data.items():
+            user.__setattr__(key, value)
+
+        user.save()
+
+        return HttpResponseRedirect(reverse_lazy('profile'))
 
 
 class LogIn(LoginView):
