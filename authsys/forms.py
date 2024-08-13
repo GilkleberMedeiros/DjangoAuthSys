@@ -5,6 +5,11 @@ from django.contrib.auth.forms import UserCreationForm, UsernameField
 
 
 class UserSignUpModelForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].required = True
+
+
     prime_user_permission = BooleanField(
         label="Quer ter permissão de usuário prime?",
         required=False,
