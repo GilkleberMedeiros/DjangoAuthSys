@@ -59,7 +59,7 @@ class Profile(LoginRequiredMixin, TemplateView):
 
         user.save()
 
-        return HttpResponseRedirect(reverse_lazy('profile'))
+        return HttpResponseRedirect(reverse_lazy('profile_changes_done'))
     
 
 class ChangeDone(TemplateView):
