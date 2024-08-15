@@ -60,6 +60,10 @@ class Profile(LoginRequiredMixin, TemplateView):
         user.save()
 
         return HttpResponseRedirect(reverse_lazy('profile'))
+    
+
+class ChangeDone(TemplateView):
+    template_name = "user_data_altered_done.html"
 
 
 class LogIn(LoginView):
