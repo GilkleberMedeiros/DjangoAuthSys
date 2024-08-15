@@ -40,7 +40,7 @@ class Profile(LoginRequiredMixin, TemplateView):
     template_name = "profile.html"
 
     def post(self, request, *args, **kwargs):
-        fields = ["id", "username", "first_name", "last_name", "email"]
+        fields = ["id", "username", "first_name", "last_name", "email", "password"]
         user_new_data = {}
 
         for key in fields:
@@ -51,7 +51,11 @@ class Profile(LoginRequiredMixin, TemplateView):
         except: return HttpResponseNotFound("Usuário não existe!")
 
         for key, value in user_new_data.items():
-            user.__setattr__(key, value)
+            if key != "password":
+                user.__setattr__(key, value)
+                continue
+
+            user.set_password(value)
 
         user.save()
 

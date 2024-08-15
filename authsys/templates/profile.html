@@ -35,13 +35,12 @@
             <button type="button" onclick="liberar_edicao('email')">Editar</button>
             <br>
 
-            <input type="submit" value="Salvar" id="main_submit_button" hidden>
-        </form>
-        <form action="./change_password/" method="post">
-            {% csrf_token %}
             <label for="pass">Não é sua senha real, apenas uma representação</label>
-            <input id="pass" type="password" value="12345678" required disabled>
+            <input id="pass" type="password" value="12345678" name="password" required disabled>
             <button type="submit">Editar</button>
+            <br>
+
+            <input type="submit" value="Salvar" id="main_submit_button" hidden>
         </form>
     </div>
 {% endblock %}
