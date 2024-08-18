@@ -1,0 +1,11 @@
+{ extends '../base.html' }
+
+{% block title %}
+    Sua confirmação de email falhou
+{% endblock %}
+
+{% block body %}
+    <h1>Sua confirmação de email falhou</h1>
+    <p>Motivo: {{ fail_message }}</p>
+    <a href="{% url 'profile' %}">Voltar para o perfil</a>
+{% endblock %}
