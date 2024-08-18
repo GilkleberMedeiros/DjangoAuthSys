@@ -15,7 +15,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView, View
 
 from .forms import UserSignUpModelForm
-from .models import Dummy
+from .models import Dummy, CustomUser
 from .utils import is_permission_created_create
 from .mixins import (
     SendValidationEmailMixin, 
@@ -84,7 +84,7 @@ class LogOut(LogoutView):
 
 class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
     template_name = "signup.html"
-    model = User
+    model = CustomUser
     success_url = reverse_lazy("login")
     form_class = UserSignUpModelForm
     success_message = "Sua Conta foi registrada com sucesso!"

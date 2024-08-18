@@ -124,6 +124,7 @@ STATICFILES_DIRS = [
 ]
 
 # Auth Url Configuration
+AUTH_USER_MODEL = "authsys.CustomUser"
 LOGIN_URL = "/profile/login/"
 LOGIN_REDIRECT_URL = "/profile/"
 LOGOUT_REDIRECT_URL = ""
@@ -143,7 +144,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = config("EMAIL_PORT")
 EMAIL_USE_TSL = config("EMAIL_USE_TSL")
 
-# Custom email settings
+# Validation email settings
 EMAIL_VALIDATE_MESSAGE_AGE = 720000
 NON_EMAIL_VALIDATED_USER_AGE = 3.6e+6
 # Format {user username:token256BITs}
