@@ -1,0 +1,11 @@
+{ extends '../base.html' }
+
+{% block title %}
+    Sua confirmação de email foi sucesso
+{% endblock %}
+
+{% block body %}
+    <h1>Sua confirmação de email foi sucesso</h1>
+    <p>Motivo: {{ success_message }}</p>
+    <a href="{% url 'profile' %}">Voltar para o perfil</a>
+{% endblock %}
