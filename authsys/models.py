@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Dummy(models.Model):
@@ -8,3 +7,12 @@ class Dummy(models.Model):
 
     class Meta:
         app_label = "dummy"
+
+
+class CustomUser(User):
+    email_validated = models.BooleanField(
+        "Campo que define se o email de um usuário foi validado",
+        "email_validated",
+        blank=True,
+        default=False,
+    )
