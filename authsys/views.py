@@ -9,13 +9,18 @@ from django.contrib.auth.decorators import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic.edit import CreateView
-from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
+
+from django.views.generic.edit import CreateView
+from django.views.generic.base import TemplateView, View
 
 from .forms import UserSignUpModelForm
 from .models import Dummy
 from .utils import is_permission_created_create
+from .mixins import (
+    SendValidationEmailMixin, 
+    ConfirmValidationEmailMixin, 
+)
 
 from django.http.response import (
     HttpResponse, 
@@ -77,12 +82,14 @@ class LogOut(LogoutView):
         return reverse_lazy("home")
 
 
-class SignUp(SuccessMessageMixin, CreateView):
+class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
     template_name = "signup.html"
     model = User
     success_url = reverse_lazy("login")
     form_class = UserSignUpModelForm
     success_message = "Sua Conta foi registrada com sucesso!"
+
+    email_subject = "Valide seu email no [SITE]"
 
     def form_valid(self, form):
         r = super().form_valid(form)
@@ -92,4 +99,15 @@ class SignUp(SuccessMessageMixin, CreateView):
             self.object.user_permissions.add(perm)
             self.object.save()
 
+        self.send_email(self.object)
+
         return r
+    
+class ConfirmEmail(LoginRequiredMixin, ConfirmValidationEmailMixin, View):
+    
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        user = request.user
+        token = request.POST["token"]
+        datetime = request.POST["datetime"]
+
+        return self.valid_email(request, user, token, datetime)

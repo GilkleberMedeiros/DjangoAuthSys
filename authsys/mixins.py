@@ -51,7 +51,7 @@ class ConfirmValidationEmailMixin:
     __context = {}
     extra_context = {}
 
-    def valid_email(self, request, user, token, datetime):
+    def valid_email(self, request, user, token: str, datetime):
         from datetime import datetime as dt
         from django.shortcuts import render
         from .utils import is_permission_created_create
