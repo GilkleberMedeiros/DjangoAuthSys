@@ -146,4 +146,6 @@ EMAIL_USE_TSL = config("EMAIL_USE_TSL")
 # Custom email settings
 EMAIL_VALIDATE_MESSAGE_AGE = 720000
 NON_EMAIL_VALIDATED_USER_AGE = 3.6e+6
+# Format {user username:token256BITs}
+VALIDATION_EMAILS_SENDED = {}
 
