@@ -1,6 +1,6 @@
 from home import settings
 
-class SendValidateEmailMixin:
+class SendValidationEmailMixin:
     email_template = "emails/email_validate.html"
     from_email = settings.DEFAULT_FROM_EMAIL
     email_subject = "Validate your email"
@@ -23,7 +23,7 @@ class SendValidateEmailMixin:
         from datetime import datetime
 
         self.__email_context["username"] = self.user.username
-        self.__email_context["time"] = datetime.now()
+        self.__email_context["datetime"] = datetime.now()
         self.__email_context["token"] = self.generate_token()
         self.__email_context.update(self.email_extra_context)
 
