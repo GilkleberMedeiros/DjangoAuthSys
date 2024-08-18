@@ -12,8 +12,12 @@ class SendValidateEmailMixin:
         import secrets
 
         token = secrets.token_hex(self._token_bytes_lenght)
+        self.store_token(token)
 
         return token
+    
+    def store_token(self, token: str):
+        settings.VALIDATION_EMAILS_SENDED[self.user.username] = token
     
     def set_context(self):
         from datetime import datetime
