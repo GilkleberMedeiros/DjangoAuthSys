@@ -105,9 +105,9 @@ class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
     
 class ConfirmEmail(LoginRequiredMixin, ConfirmValidationEmailMixin, View):
     
-    def post(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         user = request.user
-        token = request.POST["token"]
-        datetime = request.POST["datetime"]
+        token = request.GET["token"]
+        datetime = request.GET["datetime"]
 
         return self.valid_email(request, user, token, datetime)

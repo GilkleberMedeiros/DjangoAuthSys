@@ -3,13 +3,5 @@
     <hr>
     <p style="color: brown; background-color: aquamarine;">Abaixo clique no link para validar seu email.</p>
 
-    <form action="{% url 'confirm_email' %}" method="post">
-        <input type="text" name="username" value="{{ username }}" required hidden>
-        <input type="datetime" name="time" value="{{ time }}" required hidden>
-        <input type="text" name="token" value="{{ token }}" required hidden>
-
-        <input type="submit" value="Validar meu email" style="background-color: rgba(0, 0, 0, 0); 
-        text-decoration: underline; 
-        color: blue;">
-    </form>
+    <a href="{{ confirm_url }}?username={{ username }}&token={{ token }}&datetime={{ datetime }}">Valide seu email.</a>
 </div>
