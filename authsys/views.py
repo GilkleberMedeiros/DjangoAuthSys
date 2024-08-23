@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from django.shortcuts import render
 
 from django.contrib.auth.views import LoginView, LogoutView
@@ -88,7 +89,7 @@ class LogOut(LogoutView):
 class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
     template_name = "signup.html"
     model = CustomUser
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("send_validation_email")
     form_class = UserSignUpModelForm
     success_message = "Sua Conta foi registrada com sucesso!"
 
@@ -105,6 +106,27 @@ class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
         self.send_email(self.object)
 
         return r
+    
+
+class ValidationEmailSent(TemplateView):
+    template_name = "emails/validation_email_sent.html"
+    next_page = reverse_lazy("login")
+
+    def get_context_data(self, **kwargs) -> dict[str, any]:
+        context = super().get_context_data(**kwargs)
+        context["next_page"] = self.next_page
+
+        return context
+    
+class SendValidationEmail(SendValidationEmailMixin, ValidationEmailSent):
+    next_page = reverse_lazy("profile")
+    email_subject = "Valide seu email no [SITE]"
+
+    def get(self, request: HttpRequest, *args: tuple[any], **kwargs: dict[any, any]) -> HttpResponse:
+        self.send_email(user=request.user)
+
+        return super().get(request, *args, **kwargs)
+
     
 class ConfirmEmail(LoginRequiredMixin, ConfirmValidationEmailMixin, View):
     
