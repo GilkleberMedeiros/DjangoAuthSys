@@ -102,6 +102,8 @@ class ConfirmValidationEmailMixin:
             user.user_permissions.add(perm)
             user.save()
 
+            VALIDATION_EMAILS_SENT.pop(user.username)
+
             return render(request, self.confirm_success_template, self.__context)
 
 
