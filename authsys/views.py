@@ -1,7 +1,14 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import (
+    LoginView, 
+    LogoutView,
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import (
     login_required, 
@@ -136,3 +143,21 @@ class ConfirmEmail(LoginRequiredMixin, ConfirmValidationEmailMixin, View):
         datetime = request.GET["datetime"]
 
         return self.valid_email(request, user, token, datetime)
+    
+
+class PasswordReset(PasswordResetView):
+    template_name = "password_reset.html"
+    email_template_name = "emails/password_reset_plain_text.html"
+    html_email_template_name = "emails/password_reset.html"
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    template_name = "password_reset_done.html"
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    template_name = "password_reset_confirm.html"
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    template_name = "password_reset_confirm.html"
