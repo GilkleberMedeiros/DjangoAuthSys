@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from django.shortcuts import render
 
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import (
     login_required, 
     permission_required, 
@@ -56,7 +56,7 @@ class Profile(LoginRequiredMixin, TemplateView):
             try: user_new_data[key] = request.POST[key]
             except: pass
 
-        try: user = User.objects.get(pk=user_new_data["id"])
+        try: user = CustomUser.objects.get(pk=user_new_data["id"])
         except: return HttpResponseNotFound("Usuário não existe!")
 
         for key, value in user_new_data.items():
@@ -89,7 +89,7 @@ class LogOut(LogoutView):
 class SignUp(SuccessMessageMixin, SendValidationEmailMixin, CreateView):
     template_name = "signup.html"
     model = CustomUser
-    success_url = reverse_lazy("send_validation_email")
+    success_url = reverse_lazy("validation_email_sent")
     form_class = UserSignUpModelForm
     success_message = "Sua Conta foi registrada com sucesso!"
 
