@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    Email de validação enviado
+{% endblock %}
+
+{% block NavBarBrand %}
+    Enviado
+{% endblock %}
+
+{% block content %}
+    <h1>Um email de validação foi enviado</h1>
+    <p>Esse email tem validade de 12 minutos, clique no link antes disso.</p>
+
+    <a href="{{ next_page }}">Ir para próxima página</a>
+{% endblock %}
