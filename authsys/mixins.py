@@ -1,5 +1,6 @@
 from home import settings
-
+from django.utils import timezone
+from django.http import HttpResponseRedirect
 
 class SendValidationEmailMixin:
     email_template = "emails/email_validate.html"
@@ -101,3 +102,34 @@ class ConfirmValidationEmailMixin:
 
             return render(request, self.confirm_success_template, self.__context)
 
+
+class EmailRequiredMixin:
+    redirect_url = "/"
+
+    def is_anonymoususer(self):
+        return self.user.id is None
+    
+    def is_admin(self):
+        return self.user.is_superuser or self.user.is_staff
+    
+    def get_email_valid(self):
+        return self.user.email_validated
+        
+    def get_expired(self):
+        td = timezone.now() - self.user.date_joined
+
+        return td.total_seconds * 1000 > settings.NON_EMAIL_VALIDATED_USER_AGE
+
+    def dispatch(self, request, *args, **kwargs):
+        self.user = request.user
+
+        if self.is_anonymoususer():
+            return HttpResponseRedirect(settings.LOGIN_URL)
+        
+        if self.is_admin():
+            return super().dispatch(request, *args, **kwargs)
+        
+        if not self.get_email_valid() and self.get_expired():
+            return HttpResponseRedirect(self.redirect_url)
+        
+        return super().dispatch(request, *args, **kwargs)
