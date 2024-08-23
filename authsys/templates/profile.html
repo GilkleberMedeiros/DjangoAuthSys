@@ -35,6 +35,12 @@
             <button type="button" onclick="liberar_edicao('email')">Editar</button>
             <br>
 
+            <p>Seu email está validado? <b class="text-body-success">{{ user.email_validated }}</b></p>
+            {% if not user.email_validated %}
+                <a href="{% url 'send_validation_email' %}">Valide seu email</a>
+            {% endif %}
+            <br>
+
             <label for="pass">Não é sua senha real, apenas uma representação</label>
             <input id="pass" type="password" value="12345678" name="password" required disabled>
             <button type="button" onclick="liberar_edicao('pass')">Editar</button>
