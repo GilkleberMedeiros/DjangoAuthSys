@@ -145,8 +145,8 @@ EMAIL_PORT = config("EMAIL_PORT", cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TSL", cast=bool)
 
 # Validation email settings
-EMAIL_VALIDATE_MESSAGE_AGE = 720000
-NON_EMAIL_VALIDATED_USER_AGE = 3.6e+6
+EMAIL_VALIDATE_MESSAGE_AGE = 720000     # Miliseconds
+NON_EMAIL_VALIDATED_USER_AGE = 1.8e+6   # Miliseconds
 # Format {user username:token256BITs}
 VALIDATION_EMAILS_SENT = {}
 

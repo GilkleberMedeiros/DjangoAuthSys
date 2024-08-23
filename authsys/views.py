@@ -21,6 +21,7 @@ from .mixins import (
     SendValidationEmailMixin, 
     ConfirmValidationEmailMixin, 
 )
+from .decorators import email_required
 
 from django.http.response import (
     HttpResponse, 
@@ -33,10 +34,12 @@ def home(request):
     return render(request, "home.html")
 
 @login_required
+@email_required
 def pag1(request):
     return render(request, "pag1.html")
 
 @login_required
+@email_required
 @permission_required("dummy.view_pag2")
 def pag2(request):
     return render(request, "pag2.html")
