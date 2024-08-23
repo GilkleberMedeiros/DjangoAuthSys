@@ -1,10 +1,21 @@
-from home import settings
+from home.settings import (
+    DEFAULT_FROM_EMAIL,
+    VALIDATION_EMAILS_SENT,
+    EMAIL_VALIDATE_MESSAGE_AGE,
+    NON_EMAIL_VALIDATED_USER_AGE,
+    LOGIN_URL,
+)
+from datetime import datetime as dt
+from django.template.loader import render_to_string
+from django.shortcuts import render
+from .utils import is_permission_created_create
+from .models import Dummy
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 
 class SendValidationEmailMixin:
     email_template = "emails/email_validate.html"
-    from_email = settings.DEFAULT_FROM_EMAIL
+    from_email = DEFAULT_FROM_EMAIL
     email_subject = "Validate your email"
     email_confirm_url = "http://localhost:8000/profile/confirm/email/"
     datetime_str_format = "%d/%m/%y %H:%M:%S.%f"
@@ -21,21 +32,17 @@ class SendValidationEmailMixin:
         return token
     
     def store_token(self, token: str):
-        settings.VALIDATION_EMAILS_SENT[self.user.username] = token
+        VALIDATION_EMAILS_SENT[self.user.username] = token
     
     def set_context(self):
-        from datetime import datetime
-
         self.__email_context["confirm_url"] = self.email_confirm_url
         self.__email_context["username"] = self.user.username
         self.__email_context["datetime"] = \
-            datetime.now().strftime(self.datetime_str_format)
+            dt.now().strftime(self.datetime_str_format)
         self.__email_context["token"] = self.generate_token()
         self.__email_context.update(self.email_extra_context)
 
     def render_email(self):
-        from django.template.loader import render_to_string
-
         return render_to_string(self.email_template, self.__email_context)
     
     def send_email(self, user=None):
@@ -59,21 +66,16 @@ class ConfirmValidationEmailMixin:
     datetime_str_format = "%d/%m/%y %H:%M:%S.%f"
 
     def valid_email(self, request, user, token: str, datetime_str):
-        from datetime import datetime as dt
-        from django.shortcuts import render
-        from .utils import is_permission_created_create
-        from .models import Dummy
-
         datetime = dt.strptime(datetime_str, self.datetime_str_format)
 
         miliseconds_passed = ((dt.now() - datetime).total_seconds() * 1000)
 
-        if miliseconds_passed > settings.EMAIL_VALIDATE_MESSAGE_AGE:
+        if miliseconds_passed > EMAIL_VALIDATE_MESSAGE_AGE:
             self.__context["fail_message"] = "Este link expirou"
             self.__context.update(self.extra_context)
 
             return render(request, self.confirm_failed_template, self.__context)
-        elif not settings.VALIDATION_EMAILS_SENT.get(user.username, "") == token:
+        elif not VALIDATION_EMAILS_SENT.get(user.username, "") == token:
             self.__context["fail_message"] = \
                 "O nome de usuário de \
                 quem está acessando este link não é o memso para o \
@@ -118,13 +120,13 @@ class EmailRequiredMixin:
     def get_expired(self):
         td = timezone.now() - self.user.date_joined
 
-        return td.total_seconds * 1000 > settings.NON_EMAIL_VALIDATED_USER_AGE
+        return td.total_seconds * 1000 > NON_EMAIL_VALIDATED_USER_AGE
 
     def dispatch(self, request, *args, **kwargs):
         self.user = request.user
 
         if self.is_anonymoususer():
-            return HttpResponseRedirect(settings.LOGIN_URL)
+            return HttpResponseRedirect(LOGIN_URL)
         
         if self.is_admin():
             return super().dispatch(request, *args, **kwargs)
