@@ -160,4 +160,4 @@ class PasswordResetConfirm(PasswordResetConfirmView):
 
 
 class PasswordResetComplete(PasswordResetCompleteView):
-    template_name = "password_reset_confirm.html"
+    template_name = "password_reset_complete.html"
